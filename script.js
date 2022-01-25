@@ -9,13 +9,13 @@ function isInArray(value, array) {
     return array.indexOf(value) > -1;
 }
 
- function desktopcheck() {
+function desktopcheck() {
     var check = false;
-    if(window.innerWidth>768){
-        check=true;
+    if (window.innerWidth > 768) {
+        check = true;
     }
     return check;
-  }
+}
 
 
 
@@ -36,13 +36,13 @@ function addToContainer(value, flag) {
     // remove.className = "remove-styling";
     // tickMark.className = "tick-styling";
 
-    if(!desktopcheck()){
-        tickMark.classList="tick-styling";
-        remove.classList="remove-styling";
+    if (!desktopcheck()) {
+        tickMark.classList = "tick-styling";
+        remove.classList = "remove-styling";
     }
-    else{
-        tickMark.classList="tick-styling tick-hover";
-        remove.classList="remove-styling remove-hover";
+    else {
+        tickMark.classList = "tick-styling tick-hover";
+        remove.classList = "remove-styling remove-hover";
 
     }
     tickMark.addEventListener('click', function () {
@@ -80,9 +80,9 @@ window.onload = function () {
     todos = pendingTasks;
     completed = completedTasks;
 
-    if(!desktopcheck()){
+    if (!desktopcheck()) {
         addToDoButton.className = "addMobile";
-        removeAll.className= "removeMobile";
+        removeAll.className = "removeMobile";
     }
     for (i = 0; i < todos.length; i++) {
         if (isInArray(todos[i], completed)) {
@@ -92,6 +92,7 @@ window.onload = function () {
             addToContainer(todos[i], true);
         }
     }
+    inputField.focus();
 }
 
 
@@ -116,6 +117,13 @@ removeAll.addEventListener('click', function () {
     completed = [];
     localStorage.setItem("todos", JSON.stringify(todos));
     localStorage.setItem("completed", JSON.stringify(completed));
+})
+
+document.addEventListener('keypress', (e) => {
+    inputField.focus();
+    if (e.key == "Enter"){
+        addToDoButton.click();
+    }
 })
 window.onbeforeunload = function () {
     localStorage.setItem("todos", JSON.stringify(todos));
