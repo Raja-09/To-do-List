@@ -25,6 +25,7 @@ h1 {
   background-color: #1a73e8;
   text-align: center;
   border-radius: 5px;
+  transition:0.5s;
 }
 .removeButton {
   height: 45px;
@@ -36,6 +37,7 @@ h1 {
   background-color: #1a73e8;
   border-radius: 5px;
   align-self: center;
+  transition: 0.5s;
 }
 
 .addButton:hover {

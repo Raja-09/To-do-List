@@ -33,6 +33,7 @@
   font-size: 20px;
   text-align: center;
   float: right;
+  transition: 0.3s;
 }
 .tick-styling {
   float: right;
@@ -40,6 +41,7 @@
   width: 34px;
   text-align: center;
   font-size: 20px;
+  transition: 0.3s;
 }
 .tick-hover:hover {
   background-color: lightgreen;
