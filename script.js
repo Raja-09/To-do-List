@@ -5,6 +5,7 @@ let inputField = document.getElementById("inputbox");
 let removeAll = document.getElementById("remall");
 let todos = new Array();
 let completed = new Array();
+let taskArr = [];
 function isInArray(value, array) {
     return array.indexOf(value) > -1;
 }
@@ -28,14 +29,19 @@ function addToContainer(value, flag) {
     remove.innerHTML = "&#128465;"
     paragraph.className = "paragraph-styling";
     paragraph.innerText = value;
-
+    
     toDoContainer.appendChild(paragraph);
     toDoContainer.appendChild(remove);
     toDoContainer.appendChild(tickMark);
     toDoContainer.appendChild(lnbr);
-    // remove.className = "remove-styling";
-    // tickMark.className = "tick-styling";
-
+    
+    let obj ={
+    };
+    obj.task = inputField.value.trim();
+    obj.check = false;
+    taskArr.push(obj); 
+    console.log(taskArr);
+    
     if (!desktopcheck()) {
         tickMark.classList = "tick-styling";
         remove.classList = "remove-styling";
@@ -43,16 +49,22 @@ function addToContainer(value, flag) {
     else {
         tickMark.classList = "tick-styling tick-hover";
         remove.classList = "remove-styling remove-hover";
-
     }
     tickMark.addEventListener('click', function () {
         paragraph.style.textDecoration = "line-through";
-        if (!isInArray(paragraph.innerText, completed)) { completed.push(paragraph.innerText); }
 
+        let getString = paragraph.innerText;
+        let index = taskArr.findIndex((e) => e.task == getString);
+        taskArr[index].check = true;
+        // console.log(index);
+        console.log(taskArr);
+
+        if (!isInArray(paragraph.innerText, completed)) { completed.push(paragraph.innerText); }
         paragraph.addEventListener('click', function () {
             paragraph.style.textDecoration = "none";
             var index = completed.indexOf(paragraph.innerText);
             completed.splice(index, 1);
+            taskArr[index].check=false;
         })
     })
     if (!flag) {
@@ -64,13 +76,17 @@ function addToContainer(value, flag) {
         toDoContainer.removeChild(remove);
         toDoContainer.removeChild(tickMark);
         toDoContainer.removeChild(lnbr);
+
+        let remIndex = taskArr.findIndex((e)=> e.task == paragraph.innerText);
+        taskArr.splice(remIndex,1);
+
         var index1 = todos.indexOf(paragraph.innerText);
         var index2 = completed.indexOf(paragraph.innerText);
         todos.splice(index1, 1);
         if (isInArray(paragraph.innerText, completed)) {
             completed.splice(index2, 1);
         }
-
+        
     })
 }
 
@@ -79,7 +95,7 @@ window.onload = function () {
     var completedTasks = JSON.parse(localStorage.completed);
     todos = pendingTasks;
     completed = completedTasks;
-
+    
     if (!desktopcheck()) {
         addToDoButton.className = "addMobile";
         removeAll.className = "removeMobile";
@@ -112,9 +128,11 @@ addToDoButton.addEventListener('click', function () {
 })
 
 removeAll.addEventListener('click', function () {
+    
     toDoContainer.innerHTML = "";
     todos = [];
     completed = [];
+    taskArr=[];
     localStorage.setItem("todos", JSON.stringify(todos));
     localStorage.setItem("completed", JSON.stringify(completed));
 })
