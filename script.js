@@ -1,11 +1,9 @@
+// var taskArr= JSON.parse(localStorage.tasks); 
 let addToDoButton = document.getElementById("add");
-// console.log(addToDoButton);
 let toDoContainer = document.getElementById("todoscontainer");
 let inputField = document.getElementById("inputbox");
 let removeAll = document.getElementById("remall");
-let todos = new Array();
-let completed = new Array();
-let taskArr = [];
+let taskArr = new Array();
 function isInArray(value, array) {
     return array.indexOf(value) > -1;
 }
@@ -29,19 +27,18 @@ function addToContainer(value, flag) {
     remove.innerHTML = "&#128465;"
     paragraph.className = "paragraph-styling";
     paragraph.innerText = value;
-    
+
     toDoContainer.appendChild(paragraph);
     toDoContainer.appendChild(remove);
     toDoContainer.appendChild(tickMark);
     toDoContainer.appendChild(lnbr);
-    
-    let obj ={
+
+    let obj = {
     };
-    obj.task = inputField.value.trim();
+    obj.task = value.trim();
     obj.check = false;
-    taskArr.push(obj); 
-    console.log(taskArr);
-    
+    taskArr.push(obj);
+
     if (!desktopcheck()) {
         tickMark.classList = "tick-styling";
         remove.classList = "remove-styling";
@@ -56,19 +53,18 @@ function addToContainer(value, flag) {
         let getString = paragraph.innerText;
         let index = taskArr.findIndex((e) => e.task == getString);
         taskArr[index].check = true;
-        // console.log(index);
-        console.log(taskArr);
+        tickMark.innerHTML = "&#x238C";
+        if (desktopcheck()) {
+            tickMark.classList.toggle('undoButton');
+        }
 
-        if (!isInArray(paragraph.innerText, completed)) { completed.push(paragraph.innerText); }
-        paragraph.addEventListener('click', function () {
+        tickMark.addEventListener('click', function () {
             paragraph.style.textDecoration = "none";
-            var index = completed.indexOf(paragraph.innerText);
-            completed.splice(index, 1);
-            taskArr[index].check=false;
+            tickMark.innerHTML = "✔";
+            taskArr[index].check = false;
         })
     })
-    if (!flag) {
-        // paragraph.style.textDecoration="line-through";
+    if (flag) {
         tickMark.click();
     }
     remove.addEventListener('click', function () {
@@ -77,36 +73,20 @@ function addToContainer(value, flag) {
         toDoContainer.removeChild(tickMark);
         toDoContainer.removeChild(lnbr);
 
-        let remIndex = taskArr.findIndex((e)=> e.task == paragraph.innerText);
-        taskArr.splice(remIndex,1);
-
-        var index1 = todos.indexOf(paragraph.innerText);
-        var index2 = completed.indexOf(paragraph.innerText);
-        todos.splice(index1, 1);
-        if (isInArray(paragraph.innerText, completed)) {
-            completed.splice(index2, 1);
-        }
-        
+        let remIndex = taskArr.findIndex((e) => e.task == paragraph.innerText);
+        taskArr.splice(remIndex, 1);
     })
 }
 
 window.onload = function () {
-    var pendingTasks = JSON.parse(localStorage.todos);
-    var completedTasks = JSON.parse(localStorage.completed);
-    todos = pendingTasks;
-    completed = completedTasks;
-    
+    let pendingTasks = JSON.parse(localStorage.tasks);
+    // taskArr=pendingTasks; //infinite loop pls dont try 
     if (!desktopcheck()) {
         addToDoButton.className = "addMobile";
         removeAll.className = "removeMobile";
     }
-    for (i = 0; i < todos.length; i++) {
-        if (isInArray(todos[i], completed)) {
-            addToContainer(todos[i], false);
-        }
-        else {
-            addToContainer(todos[i], true);
-        }
+    for (i = 0; i < pendingTasks.length; i++) {
+        addToContainer(pendingTasks[i].task, pendingTasks[i].check);
     }
     inputField.focus();
 }
@@ -118,9 +98,17 @@ addToDoButton.addEventListener('click', function () {
         alert("Field Empty");
     }
     else {
-        if (!isInArray(inputField.value, todos)) {
-            todos.push(inputField.value);
-            addToContainer(inputField.value, true);
+        let string = inputField.value.trim();
+        let ind = taskArr.findIndex((a) => a.task == string);
+        console.log(ind);
+        if (ind < 0) {
+            let obj = {};
+            obj.task = inputField.value.trim();
+            obj.check = false;
+            addToContainer(inputField.value.trim(), false);
+        }
+        else {
+            console.log("Enter unique value");
         }
         inputField.value = ""
 
@@ -128,22 +116,18 @@ addToDoButton.addEventListener('click', function () {
 })
 
 removeAll.addEventListener('click', function () {
-    
+
     toDoContainer.innerHTML = "";
-    todos = [];
-    completed = [];
-    taskArr=[];
-    localStorage.setItem("todos", JSON.stringify(todos));
-    localStorage.setItem("completed", JSON.stringify(completed));
+    taskArr = [];
+    localStorage.setItem("tasks", JSON.stringify(taskArr));
 })
 
 document.addEventListener('keypress', (e) => {
     inputField.focus();
-    if (e.key == "Enter"){
+    if (e.key == "Enter") {
         addToDoButton.click();
     }
 })
 window.onbeforeunload = function () {
-    localStorage.setItem("todos", JSON.stringify(todos));
-    localStorage.setItem("completed", JSON.stringify(completed));
+    localStorage.setItem("tasks", JSON.stringify(taskArr));
 }
