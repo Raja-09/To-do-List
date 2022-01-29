@@ -39,13 +39,11 @@ function addToContainer(value, flag) {
     obj.check = false;
     taskArr.push(obj);
 
-    if (!desktopcheck()) {
-        tickMark.classList = "tick-styling";
-        remove.classList = "remove-styling";
-    }
-    else {
-        tickMark.classList = "tick-styling tick-hover";
-        remove.classList = "remove-styling remove-hover";
+    tickMark.classList = "tick-styling";
+    remove.classList = "remove-styling";
+    if (desktopcheck()) {
+        tickMark.classList.toggle('tick-hover');
+        remove.classList.toggle('remove-hover');
     }
     tickMark.addEventListener('click', function () {
         paragraph.style.textDecoration = "line-through";
@@ -100,7 +98,6 @@ addToDoButton.addEventListener('click', function () {
     else {
         let string = inputField.value.trim();
         let ind = taskArr.findIndex((a) => a.task == string);
-        console.log(ind);
         if (ind < 0) {
             let obj = {};
             obj.task = inputField.value.trim();
@@ -108,7 +105,7 @@ addToDoButton.addEventListener('click', function () {
             addToContainer(inputField.value.trim(), false);
         }
         else {
-            console.log("Enter unique value");
+            alert("Task Already added");
         }
         inputField.value = ""
 
