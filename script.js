@@ -109,10 +109,11 @@ addToDoButton.addEventListener('click', function () {
 })
 
 removeAll.addEventListener('click', function () {
-
-    toDoContainer.innerHTML = "";
-    taskArr = [];
-    localStorage.setItem("tasks", JSON.stringify(taskArr));
+    if (confirm("Remove all tasks ?")) {
+        toDoContainer.innerHTML = "";
+        taskArr = [];
+        localStorage.setItem("tasks", JSON.stringify(taskArr));
+    }
 })
 
 document.addEventListener('keypress', (e) => {
