@@ -4,10 +4,6 @@ let toDoContainer = document.getElementById("todoscontainer");
 let inputField = document.getElementById("inputbox");
 let removeAll = document.getElementById("remall");
 let taskArr = new Array();
-function isInArray(value, array) {
-    return array.indexOf(value) > -1;
-}
-
 function desktopcheck() {
     var check = false;
     if (window.innerWidth > 768) {
